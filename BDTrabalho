@@ -1,0 +1,287 @@
+create database condominio_projeto default  character set utf8; 
+use condominio_projeto;
+
+-- TABELA CONDOMINIO
+CREATE TABLE  condominio(
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(100) NULL DEFAULT NULL,
+  CNPJ VARCHAR(14) NULL DEFAULT NULL,
+  endereco VARCHAR(255) NULL DEFAULT NULL,
+  PRIMARY KEY (id))
+DEFAULT CHARACTER SET = utf8;
+-- TABELA CONDOMINO
+CREATE TABLE  condomino (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(100) NULL DEFAULT NULL,
+  CPF VARCHAR(11) NULL DEFAULT NULL,
+  endereco VARCHAR(200) NULL DEFAULT NULL,
+  telefone_celular VARCHAR(11) NULL DEFAULT NULL,
+  telefone_fisico VARCHAR(11) NULL DEFAULT NULL,
+  email VARCHAR(45) NULL DEFAULT NULL,
+  codigo_bloco VARCHAR(100) NULL DEFAULT NULL,
+  numero_apto INT(5) NULL DEFAULT NULL,
+  senha VARCHAR(100) NULL DEFAULT NULL,
+  sindico TINYINT NULL DEFAULT NULL,
+  sub_sindico TINYINT NULL DEFAULT NULL,
+  PRIMARY KEY (id))
+DEFAULT CHARACTER SET = utf8;
+-- TABELA SALAO FESTA
+CREATE TABLE  salao_festa (
+  id INT(11) NOT NULL,
+  codigo_salao VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (id))
+DEFAULT CHARACTER SET = utf8;
+-- TABELA FUNCIONARIO
+CREATE TABLE  funcionario (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(100) NULL DEFAULT NULL,
+  CPF VARCHAR(11) NULL DEFAULT NULL,
+  endereco VARCHAR(200) NULL DEFAULT NULL,
+  turno VARCHAR(40) NULL DEFAULT NULL, 
+  salario DECIMAL NULL DEFAULT NULL ,
+  funcao VARCHAR(50) NULL DEFAULT NULL,
+  condominio_id INT(11) NOT NULL,
+  PRIMARY KEY (id),  
+  FOREIGN KEY (condominio_id)  REFERENCES condominio(id)   ON DELETE NO ACTION  ON UPDATE NO ACTION
+  ) 
+DEFAULT CHARACTER SET = utf8;
+
+
+-- TABELA RESERVA
+CREATE TABLE reserva (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  data DATE NULL DEFAULT NULL,
+  horario TIME NULL DEFAULT NULL,
+  salao_festa_id INT(11) NOT NULL,
+  condomino_id INT(11) NOT NULL,
+  PRIMARY KEY (id), 
+    FOREIGN KEY (salao_festa_id)
+    REFERENCES salao_festa (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    FOREIGN KEY (condomino_id)
+    REFERENCES condomino (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+DEFAULT CHARACTER SET = utf8;
+-- TABELA OCORRENCIA
+CREATE TABLE ocorrencia (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  categoria VARCHAR(100) NULL DEFAULT NULL,
+  descricao VARCHAR(200) NULL DEFAULT NULL,
+  morador_id INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT morador_id
+    FOREIGN KEY (morador_id)
+    REFERENCES condomino (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+DEFAULT CHARACTER SET = utf8;
+-- TABELA ACHADO
+CREATE TABLE achado (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  descricao VARCHAR(100) NULL DEFAULT NULL,
+  colaborador_id INT(11) NOT NULL,
+  condominio_id INT(11) NOT NULL,
+  PRIMARY KEY (id),
+    FOREIGN KEY (colaborador_id) REFERENCES funcionario (id)    ON DELETE NO ACTION  ON UPDATE NO ACTION,
+    FOREIGN KEY (condominio_id)  REFERENCES condominio (id)    ON DELETE NO ACTION    ON UPDATE NO ACTION)
+DEFAULT CHARACTER SET = utf8;
+
+-- TABELA RELACIONAMENTO CONDOMINIO_CONDIMINO
+CREATE TABLE  condominio_condomino(
+  condominio_id INT(11) NOT NULL,
+  condomino_id INT(11) NOT NULL,
+  PRIMARY KEY (condominio_id, condomino_id), 
+    FOREIGN KEY (condominio_id) REFERENCES condominio (id) ON DELETE NO ACTION ON UPDATE NO ACTION, 
+    FOREIGN KEY (condomino_id)  REFERENCES condomino (id)   ON DELETE NO ACTION   ON UPDATE NO ACTION
+    )
+DEFAULT CHARACTER SET = utf8;
+select * from condominio_condomino;
+select * from achado;
+select * from condominio;
+select * from condomino;
+select * from funcionario;
+select * from ocorrencia;
+select * from reserva;
+select * from salao_festa;
+
+-- INSERT DO SALAO FESTA
+insert into salao_festa(id,codigo_salao) values(1,'SALAO A1');
+insert into salao_festa(id,codigo_salao) values(2,'SALAO A2');
+insert into salao_festa(id,codigo_salao) values(3,'SALAO B2');
+insert into salao_festa(id,codigo_salao) values(4,'SALAO B3');
+
+select * from condominio;
+-- INSERT DOS CONDOMINO
+insert into condominio(id,nome,CNPJ,endereco) values(1,'Sol Nascente A','58962358741025','Rua Joao Sacavem, N 1500');
+insert into condominio(id,nome,CNPJ,endereco) values(2,'Sol Nascente B','58962358741025','Rua Correa Alto, N 1358');
+insert into condominio(nome,CNPJ,endereco) values('Sol Nascente D','58962358741025','Praça São Cristovão, 358');
+delete from condominio where id=5 or id =6;
+delete from condominio where CNPJ like '%58962358741025%';
+update condominio set nome="Ilha Bela" where id = 8;
+
+select * from condomino;
+-- INSERT DOS CONDOMINO
+insert into condomino(id,nome, CPF, endereco, telefone_celular, telefone_fisico, email, codigo_bloco, numero_apto, senha, sindico, sub_sindico) 
+values(1,'Juarez Filho','10303554968','Rua Alfredo','998956878','33191137','Juarez@gmail.com','BLOCO A1','105','filho12345',0,0);
+insert into condomino(nome, CPF, endereco, telefone_celular,  email, codigo_bloco, numero_apto, senha, sindico, sub_sindico) 
+values('Camila Correa','1320520555','Rua Alfredo','998956877','correa@gmail.com','BLOCO A2','103','correa12345',0,0);
+insert into condomino(nome, CPF, endereco, telefone_celular, telefone_fisico, email, codigo_bloco, numero_apto, senha, sindico, sub_sindico) 
+values('Felipao Soares','10303554958','Rua Juvenal Mafra','998446878','33171137','Soares@gmail.com','BLOCO A1','102','Soares12345',1,0);
+
+insert into condomino(nome, CPF, endereco, telefone_celular, telefone_fisico, email, codigo_bloco, numero_apto, senha, sindico, sub_sindico) 
+values('Ronaldinho Gaucho','10583554968','Rua Alfredo','998956668','33181137','Ronaldinho@gmail.com','BLOCO B3','101','Ronaldinho12345',0,1);
+
+insert into condomino(nome, CPF, endereco, telefone_celular, telefone_fisico, email, codigo_bloco, numero_apto, senha, sindico, sub_sindico) 
+values('Lionel Messi','10303664968','Rua Juvenal Mafra','998956558','33121137','Lionel@gmail.com','BLOCO B2','104','Lionel12345',0,0);
+
+insert into condomino(nome, CPF, endereco, telefone_celular, email, codigo_bloco, numero_apto, senha, sindico, sub_sindico) 
+values('Iniesta Silva','10377554968','Rua Alfredo','998954478','Iniesta@gmail.com','BLOCO A1','108','Iniesta12345',1,0);
+
+insert into condomino(nome, CPF, endereco, telefone_celular, telefone_fisico, email, codigo_bloco, numero_apto, senha, sindico, sub_sindico) 
+values('Harry Kane','10883554968','Rua Juvenal Mafra','998955778','33191537','Harry@gmail.com','BLOCO A1','109','fHarryo12345',0,1);
+
+insert into condomino(nome, CPF, endereco, telefone_celular, telefone_fisico, email, codigo_bloco, numero_apto, senha, sindico, sub_sindico) 
+values('Cristiano Ronaldo','10389554968','Rua Alfredo','998958978','33191437','Cristiano@gmail.com','BLOCO A1','107','fiCristianoo12345',0,0);
+
+insert into condomino(nome, CPF, endereco, telefone_celular,email, codigo_bloco, numero_apto, senha, sindico, sub_sindico) 
+values('Anitonio Grizman','10113554968','Rua Juvenal Mafra','998786878','Anitonio@gmail.com','BLOCO A2','106','Anitonio12345',1,0);
+
+insert into condomino(nome, CPF, endereco, telefone_celular, telefone_fisico, email, codigo_bloco, numero_apto, senha, sindico, sub_sindico) 
+values('Tony Kroos','10378554968','Rua Juvenal Mafra','998957778','33191237','Kroos@gmail.com','BLOCO A2','100','fKroos12345',0,0);
+
+
+
+select * from funcionario;
+-- INSERT DOS FUNCIONARIO
+insert into funcionario( nome, CPF, endereco, turno, salario, funcao, condominio_id)
+values( 'Severino', '10704119978', 'Rua Anita Moraes', 'Matutino', 1800, 'Porteiro',1);
+insert into funcionario( nome, CPF, endereco, turno, salario, funcao, condominio_id)
+values( 'Joao Correa', '10784119978', 'Rua Vonildo Antunes', 'Verpestino', 1800, 'Porteiro',1);
+insert into funcionario( nome, CPF, endereco, turno, salario, funcao, condominio_id)
+values( 'Solange', '10705519978', 'Rua Aline Juvenal', 'Matutino', 1900, 'Porteiro',2);
+insert into funcionario( nome, CPF, endereco, turno, salario, funcao, condominio_id)
+values( 'Pedro Carlos', '10804119778', 'Rua Cristiano Viera', 'Vespertino', 2000, 'Porteiro',2);
+insert into funcionario( nome, CPF, endereco, turno, salario, funcao, condominio_id)
+values( 'Joao Paulo', '10664119778', 'Rua Constancio Angusto', 'Integral', 2400, 'Zelador',1);
+insert into funcionario( nome, CPF, endereco, turno, salario, funcao, condominio_id)
+values( 'Marcos Santo', '10334119778', 'Rua Constancio Angusto', 'Integral', 2500, 'Zelador',2);
+
+-- UPADATE DE ENDERECO DOS FUNCIONARIO
+update  funcionario set endereco ='Rua Anita Moraes, N 152' where id =1;
+update  funcionario set endereco ='Rua Vonildo Antunes, N 358' where id =2;
+update  funcionario set endereco ='Rua Aline Juvenal, N 269' where id =3;
+update  funcionario set endereco ='Rua Cristiano Viera, N 588' where id =4;
+update  funcionario set endereco ='Rua Constancio Angusto, N 235' where id =5;
+update  funcionario set endereco ='Rua Constancio Angusto, N 236' where id =6;
+
+
+select * from ocorrencia;
+-- INSERT DO OCORRENCIA
+insert into ocorrencia( categoria, descricao, morador_id) 
+values( 'Pertubacao de sussego', 'Som Alto', '5');
+insert into ocorrencia( categoria, descricao, morador_id) 
+values('Patrimonio', 'Jogou lixo pela janela', 4);
+insert into ocorrencia( categoria, descricao, morador_id) 
+values('Patrimonio', 'Quebrou o parquinho', 2);
+insert into ocorrencia( categoria, descricao, morador_id) 
+values('Patrimonio', 'Jogou lixo na rua', 3);
+
+select * from reserva;
+-- INSERT DO RESERVA
+insert into reserva(data, horario, salao_festa_id, condomino_id) 
+values("2018-12-03", "13:40:00",1,2);
+insert into reserva(data, horario, salao_festa_id, condomino_id) 
+values("2018-12-25", "20:30:00",1,3);
+insert into reserva(data, horario, salao_festa_id, condomino_id) 
+values("2019-01-01", "07:00:00",1,1);
+insert into reserva(data, horario, salao_festa_id, condomino_id) 
+values("2019-01-01", "13:00:00",1,4);
+
+select * from achado;
+-- INSERT DO ACHADOS
+insert into achado(descricao, colaborador_id, condominio_id)
+values('Blusa preto com amarelo', 5, 1);
+insert into achado(descricao, colaborador_id, condominio_id)
+values('Chinelo verde', 6, 2);
+insert into achado(descricao, colaborador_id, condominio_id)
+values('Carteira', 5, 1);
+insert into achado(descricao, colaborador_id, condominio_id)
+values('Capinha celular', 6, 2);
+update achado set descricao='Carteira Feminina' where id = 3;
+delete from achado where id=9;
+
+select * from achado where id=2;
+select * from condominio_condomino;
+-- INSERT DOS RELACIONAMENTO DE CONDOMINIO E CONDOMINO
+insert into condominio_condomino(condominio_id, condomino_id)
+	values(1,1);
+insert into condominio_condomino(condominio_id, condomino_id)
+	values(1,2);
+insert into condominio_condomino(condominio_id, condomino_id)
+	values(1,3);
+insert into condominio_condomino(condominio_id, condomino_id)
+	values(1,6);
+insert into condominio_condomino(condominio_id, condomino_id)
+	values(1,7);
+insert into condominio_condomino(condominio_id, condomino_id)
+	values(1,8);
+insert into condominio_condomino(condominio_id, condomino_id)
+	values(1,9);
+insert into condominio_condomino(condominio_id, condomino_id)
+	values(1,10);
+insert into condominio_condomino(condominio_id, condomino_id)
+	values(2,4);
+insert into condominio_condomino(condominio_id, condomino_id)
+	values(2,5);
+
+
+
+
+-- SELECT COM INNER JOIN
+-- Funcionario dos Condominios
+select condominio.nome,funcionario.nome,funcionario.turno  from condominio inner join funcionario on condominio.id=funcionario.condominio_id;
+
+-- Funcionarios que tabralha no periodo Matutino
+select condominio.nome,funcionario.nome,funcionario.turno from condominio inner join funcionario on condominio.id=funcionario.condominio_id and turno like'matutino';
+
+-- Ocorrencia registrada  aos moradores
+select condomino.nome,ocorrencia.descricao as infracao from condomino inner join ocorrencia on condomino.id=ocorrencia.morador_id;
+
+-- Objetos registrado em achado e perdido de cada condominio
+select achado.descricao as PecaEncontrada ,funcionario.nome as FuncionarioRegistrou,condominio.nome as Condominio from achado 
+	inner join funcionario 
+		on funcionario.id=achado.colaborador_id
+	inner join condominio
+		on condominio.id=achado.condominio_id;
+-- Todo os moradores de cada condominio ordenado apartamento       
+select condominio.nome as Condominio, condomino.nome as Morador,condomino.codigo_bloco as Bloco,condomino.numero_apto as Apartamento from condominio_condomino 
+	inner join condominio
+		on condominio.id=condominio_condomino.condominio_id
+	inner join condomino
+		on condomino.id=condominio_condomino.condomino_id
+order by condomino.numero_apto;
+-- Todo os moradores de cada condominio 
+select condominio.nome as Condominio, condomino.nome as Morador,condomino.codigo_bloco as Bloco,condomino.numero_apto as Apartamento from condominio_condomino 
+	inner join condominio
+		on condominio.id=condominio_condomino.condominio_id
+	inner join condomino
+		on condomino.id=condominio_condomino.condomino_id;
+-- Reserva do salao de festa ordenado por data        
+select condomino.nome as Nome,salao_festa.codigo_salao as Salao, reserva.data as Data,reserva.horario as Horario from reserva
+	inner join condomino
+		on reserva.condomino_id=condomino.id
+	inner join salao_festa
+		on	reserva.salao_festa_id = salao_festa.id
+order by reserva.data;
+
+-- Objetos registrado em achado e perdido em um condomino especifico
+select achado.descricao as PecaEncontrada ,funcionario.nome as FuncionarioRegistrou,condominio.nome as Condominio from achado 
+	inner join funcionario 
+		on funcionario.id=achado.colaborador_id
+	inner join condominio
+		on condominio.id=achado.condominio_id and  condominio.nome  like'%Sol Nascente B%';
+
+
+
