@@ -1,0 +1,19 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Api condominio",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
+  "author": "Robert",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.9"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "knex": "^0.95.6",
+    "mysql2": "^2.2.5"
+  }
+}
